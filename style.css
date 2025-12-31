@@ -55,7 +55,7 @@ color:#00ff99;
 /* HOME */
 .home{
 height:140vh;
-background:url("images/gym.JPG") center/cover no-repeat;
+background:url("images/gym.jpg") center/cover no-repeat;
 position:relative;
 display:flex;
 align-items:center;
@@ -238,3 +238,4 @@ background:#1ebe5d;
 transform:scale(1.05);
 box-shadow:0 0 30px rgba(37,211,102,0.9);
 }
+
