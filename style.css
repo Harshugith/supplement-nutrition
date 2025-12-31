@@ -1,0 +1,240 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI, sans-serif;
+scroll-behavior:smooth;
+}
+
+body{
+background:#0e0e0e;
+color:white;
+}
+
+/* NAVBAR */
+.navbar{
+position:fixed;
+top:0;
+width:100%;
+padding:20px 60px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:rgba(0,0,0,0.7);
+z-index:1000;
+transition:0.3s;
+}
+
+.navbar.solid{
+background:black;
+}
+
+.navbar ul{
+display:flex;
+list-style:none;
+gap:30px;
+}
+
+.navbar a{
+color:white;
+text-decoration:none;
+font-weight:600;
+}
+
+.navbar a:hover,
+.active{
+color:#00ff99;
+}
+
+.logo{
+font-size:26px;
+font-weight:bold;
+color:#00ff99;
+}
+
+/* HOME */
+.home{
+height:140vh;
+background:url("images/gym.JPG") center/cover no-repeat;
+position:relative;
+display:flex;
+align-items:center;
+}
+
+.overlay{
+position:absolute;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.65);
+}
+
+.home-content{
+position:relative;
+padding-left:80px;
+max-width:600px;
+}
+
+.home-content h1{
+font-size:64px;
+line-height:1.1;
+}
+
+.home-content p{
+margin:20px 0;
+font-size:22px;
+opacity:0.9;
+}
+
+.btn{
+padding:15px 35px;
+background:#00ff99;
+color:black;
+border-radius:30px;
+text-decoration:none;
+font-weight:bold;
+}
+
+/* SECTIONS */
+.about,.contact{
+padding:140px 20px;
+text-align:center;
+background:#111;
+}
+
+/* PRODUCTS PAGE */
+.products-page{
+padding:160px 20px;
+text-align:center;
+}
+
+.product-grid{
+margin-top:50px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:30px;
+max-width:1000px;
+margin-left:auto;
+margin-right:auto;
+}
+
+/* PRODUCT CARD */
+.product-card{
+background:#1b1b1b;
+padding:40px;
+border-radius:16px;
+font-size:20px;
+cursor:pointer;
+position:relative;
+
+border:1px solid rgba(0,255,153,0.15);
+transition:0.4s;
+
+opacity:0;
+transform:translateY(40px);
+}
+
+.product-card.show{
+opacity:1;
+transform:translateY(0);
+}
+
+.product-card:hover{
+transform:translateY(-12px) scale(1.02);
+border:1px solid #00ff99;
+box-shadow:
+0 0 15px rgba(0,255,153,0.6),
+0 0 35px rgba(0,255,153,0.3);
+}
+
+/* FOOTER */
+footer{
+padding:20px;
+text-align:center;
+background:black;
+color:#777;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+.home-content{
+padding:20px;
+}
+.home-content h1{
+font-size:42px;
+}
+.navbar{
+padding:15px 25px;
+}
+}
+
+/* VIDEO BACKGROUND SECTIONS */
+.video-section{
+position:relative;
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+overflow:hidden;
+}
+
+.bg-video{
+position:absolute;
+top:50%;
+left:50%;
+width:100%;
+height:100%;
+object-fit:cover;
+transform:translate(-50%,-50%);
+z-index:1;
+}
+
+.video-overlay{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.65);
+z-index:2;
+}
+
+.video-content{
+position:relative;
+z-index:3;
+max-width:700px;
+padding:20px;
+}
+
+.video-content h2{
+font-size:42px;
+margin-bottom:20px;
+color:#00ff99;
+}
+
+.video-content p{
+font-size:20px;
+line-height:1.6;
+opacity:0.95;
+}
+
+/* WHATSAPP BUTTON */
+.whatsapp-btn{
+display:inline-block;
+margin-top:25px;
+padding:14px 32px;
+background:#25D366;
+color:#fff;
+text-decoration:none;
+font-size:18px;
+font-weight:bold;
+border-radius:50px;
+transition:0.3s;
+box-shadow:0 0 20px rgba(37,211,102,0.6);
+}
+
+.whatsapp-btn:hover{
+background:#1ebe5d;
+transform:scale(1.05);
+box-shadow:0 0 30px rgba(37,211,102,0.9);
+}
