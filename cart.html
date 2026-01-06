@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cart | Supplement Nutrition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+
+<style>
+.cart-box{max-width:950px;margin:110px auto;padding:20px;}
+.empty-cart{text-align:center;margin-top:120px;opacity:.7;}
+.cart-item{display:flex;align-items:center;gap:16px;background:#141414;padding:14px;border-radius:14px;margin-bottom:14px;}
+.cart-item img{width:80px;border-radius:10px;}
+.cart-info h4{margin:0;font-size:16px;}
+.cart-info p{margin:4px 0;font-size:14px;opacity:.8;}
+.qty{display:flex;gap:8px;align-items:center;margin-top:6px;}
+.qty button{width:26px;height:26px;border:none;border-radius:50%;background:#ff5722;color:#fff;cursor:pointer;}
+.remove{margin-left:auto;background:#ff3b3b;border:none;padding:6px 12px;border-radius:18px;font-size:13px;color:#fff;cursor:pointer;}
+.summary,.form-box,.checkout{display:none;}
+.summary{background:#101010;padding:18px;border-radius:14px;margin-top:20px;}
+.summary p{display:flex;justify-content:space-between;font-size:15px;}
+.summary h3{display:flex;justify-content:space-between;font-size:18px;}
+.form-box{background:#101010;padding:18px;border-radius:14px;margin-top:25px;}
+.form-box input,.form-box textarea{width:100%;padding:10px;margin-top:6px;margin-bottom:12px;border-radius:10px;border:none;}
+.checkout{text-align:right;margin-top:20px;}
+.checkout button{background:#25D366;color:#fff;padding:14px 32px;border:none;border-radius:30px;font-size:15px;}
+.success{color:#00e676;}
+</style>
+</head>
+
+<body>
+
+<nav class="navbar">
+  <div class="logo">Supplement Nutrition</div>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html">Products</a></li>
+  </ul>
+</nav>
+
+<div class="cart-box">
+<h2>🛒 Your Cart</h2>
+
+<div id="emptyMsg" class="empty-cart">
+  <h2>Cart is empty</h2>
+  <p>Please select items</p>
+</div>
+
+<div id="cartItems"></div>
+
+<div class="summary">
+  <p><span>Subtotal</span><span id="subtotal">₹0</span></p>
+  <p id="discount" class="success"></p>
+  <p id="freebie" class="success"></p>
+  <h3><span>Total</span><span id="totalPrice">₹0</span></h3>
+</div>
+
+<div class="form-box">
+  <h3>Customer Details</h3>
+  <input id="name" placeholder="Your Name">
+  <textarea id="address" rows="3" placeholder="Delivery Address"></textarea>
+</div>
+
+<div class="checkout">
+  <button onclick="orderWhatsApp()">Order on WhatsApp</button>
+</div>
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+const whatsappNumber = "919336174510";
+
+const cartItems = document.getElementById("cartItems");
+const emptyMsg = document.getElementById("emptyMsg");
+const subtotalEl = document.getElementById("subtotal");
+const totalEl = document.getElementById("totalPrice");
+const discountEl = document.getElementById("discount");
+const freebieEl = document.getElementById("freebie");
+const nameInput = document.getElementById("name");
+const addressInput = document.getElementById("address");
+
+let discountAmount = 0;
+let freeShaker = false;
+
+function render(){
+  cartItems.innerHTML="";
+  let subtotal = 0;
+  discountAmount = 0;
+  freeShaker = false;
+
+  if(cart.length === 0){
+    emptyMsg.style.display="block";
+    document.querySelector(".summary").style.display="none";
+    document.querySelector(".form-box").style.display="none";
+    document.querySelector(".checkout").style.display="none";
+    return;
+  }
+
+  emptyMsg.style.display="none";
+  document.querySelector(".summary").style.display="block";
+  document.querySelector(".form-box").style.display="block";
+  document.querySelector(".checkout").style.display="block";
+
+  cart.forEach((p,i)=>{
+    subtotal += p.price * p.qty;
+    cartItems.innerHTML += `
+      <div class="cart-item">
+        <img src="${p.img}">
+        <div class="cart-info">
+          <h4>${p.title}</h4>
+          <p>₹${p.price}</p>
+          <div class="qty">
+            <button onclick="qty(${i},-1)">−</button>
+            <span>${p.qty}</span>
+            <button onclick="qty(${i},1)">+</button>
+          </div>
+        </div>
+        <button class="remove" onclick="removeItem(${i})">Remove</button>
+      </div>`;
+  });
+
+  // AUTO DISCOUNT LOGIC
+  if(subtotal >= 1000 && subtotal < 2000){
+    discountAmount = 50;
+  }
+  else if(subtotal >= 2000 && subtotal < 5000){
+    discountAmount = 100;
+  }
+  else if(subtotal >= 5000){
+    discountAmount = 100;
+    freeShaker = true;
+  }
+
+  subtotalEl.innerText = "₹" + subtotal;
+  discountEl.innerText = discountAmount ? `Instant Discount: -₹${discountAmount}` : "";
+  freebieEl.innerText = freeShaker ? "🎁 Free Shaker Included" : "";
+  totalEl.innerText = "₹" + (subtotal - discountAmount);
+}
+
+function qty(i,v){
+  cart[i].qty += v;
+  if(cart[i].qty <= 0) cart.splice(i,1);
+  save();
+}
+function removeItem(i){ cart.splice(i,1); save(); }
+function save(){ localStorage.setItem("cart",JSON.stringify(cart)); render(); }
+
+function orderWhatsApp(){
+  if(!nameInput.value || !addressInput.value){
+    alert("Please enter name & address");
+    return;
+  }
+
+  let msg = `🛒 New Order\n\nName: ${nameInput.value}\nAddress: ${addressInput.value}\n\n`;
+  let subtotal = 0;
+
+  cart.forEach(p=>{
+    let t = p.price * p.qty;
+    subtotal += t;
+    msg += `${p.title}\nQty: ${p.qty}\n₹${t}\n\n`;
+  });
+
+  if(discountAmount){
+    msg += `Discount Applied: -₹${discountAmount}\n`;
+  }
+  if(freeShaker){
+    msg += `Free Gift: Shaker 🎁\n`;
+  }
+
+  msg += `TOTAL PAYABLE: ₹${subtotal - discountAmount}`;
+
+  window.location.href =
+    `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`;
+}
+
+render();
+</script>
+
+</body>
+</html>
