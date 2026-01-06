@@ -7,173 +7,224 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
-.cart-box{max-width:950px;margin:110px auto;padding:20px;}
-.empty-cart{text-align:center;margin-top:120px;opacity:.7;}
-.cart-item{display:flex;align-items:center;gap:16px;background:#141414;padding:14px;border-radius:14px;margin-bottom:14px;}
-.cart-item img{width:80px;border-radius:10px;}
-.cart-info h4{margin:0;font-size:16px;}
-.cart-info p{margin:4px 0;font-size:14px;opacity:.8;}
-.qty{display:flex;gap:8px;align-items:center;margin-top:6px;}
-.qty button{width:26px;height:26px;border:none;border-radius:50%;background:#ff5722;color:#fff;cursor:pointer;}
-.remove{margin-left:auto;background:#ff3b3b;border:none;padding:6px 12px;border-radius:18px;font-size:13px;color:#fff;cursor:pointer;}
-.summary,.form-box,.checkout{display:none;}
-.summary{background:#101010;padding:18px;border-radius:14px;margin-top:20px;}
-.summary p{display:flex;justify-content:space-between;font-size:15px;}
-.summary h3{display:flex;justify-content:space-between;font-size:18px;}
-.form-box{background:#101010;padding:18px;border-radius:14px;margin-top:25px;}
-.form-box input,.form-box textarea{width:100%;padding:10px;margin-top:6px;margin-bottom:12px;border-radius:10px;border:none;}
-.checkout{text-align:right;margin-top:20px;}
-.checkout button{background:#25D366;color:#fff;padding:14px 32px;border:none;border-radius:30px;font-size:15px;}
-.success{color:#00e676;}
+body{margin:0;background:#0e0e0e;color:#fff;font-family:Arial}
+a{text-decoration:none;color:#fff}
+
+/* CART BOX */
+.cart-box{max-width:950px;margin:120px auto 50px auto;padding:20px}
+.empty{text-align:center;margin-top:120px;opacity:.7}
+
+.item{display:flex;gap:16px;background:#151515;padding:14px;border-radius:14px;margin-bottom:14px;align-items:center}
+.item img{width:80px;border-radius:10px}
+.info h4{margin:0;font-size:16px}
+.info p{margin:4px 0;font-size:14px;opacity:.8}
+.qty{display:flex;gap:8px;margin-top:6px;align-items:center}
+.qty button{width:26px;height:26px;border:none;border-radius:50%;background:#ff5722;color:#fff;cursor:pointer;font-weight:bold}
+.remove{margin-left:auto;background:#ff3b3b;border:none;color:#fff;padding:6px 14px;border-radius:20px;cursor:pointer}
+
+.summary,.form,.checkout,.history{display:none}
+.summary{background:#111;padding:18px;border-radius:14px;margin-top:20px}
+.summary p,.summary h3{display:flex;justify-content:space-between}
+.free-gift{margin-top:10px;display:flex;align-items:center;gap:10px;background:#222;padding:10px;border-radius:10px}
+.free-gift img{width:60px;border-radius:8px}
+.green{color:#00e676}
+
+.form{background:#111;padding:18px;border-radius:14px;margin-top:20px}
+.form input,.form textarea{width:100%;padding:10px;border:none;border-radius:10px;margin-bottom:12px}
+
+.checkout{text-align:right;margin-top:20px}
+.checkout button{background:#25D366;border:none;padding:14px 30px;color:#fff;border-radius:30px;font-size:15px;cursor:pointer}
+
+.history{background:#111;padding:18px;border-radius:14px;margin-top:30px}
+.history-item{display:flex;gap:12px;border-bottom:1px solid #333;padding:12px 0}
+.history-item img{width:60px;border-radius:8px}
 </style>
 </head>
-
 <body>
 
-<nav class="navbar">
+<nav class="navbar solid">
   <div class="logo">Supplement Nutrition</div>
   <ul>
     <li><a href="index.html">Home</a></li>
     <li><a href="products.html">Products</a></li>
+    <li><a href="cart.html">Cart 🛒</a></li>
   </ul>
 </nav>
 
 <div class="cart-box">
 <h2>🛒 Your Cart</h2>
 
-<div id="emptyMsg" class="empty-cart">
+<div id="empty" class="empty">
   <h2>Cart is empty</h2>
   <p>Please select items</p>
 </div>
 
-<div id="cartItems"></div>
+<div id="items"></div>
 
 <div class="summary">
-  <p><span>Subtotal</span><span id="subtotal">₹0</span></p>
-  <p id="discount" class="success"></p>
-  <p id="freebie" class="success"></p>
-  <h3><span>Total</span><span id="totalPrice">₹0</span></h3>
+  <p><span>Subtotal</span><span id="sub">₹0</span></p>
+  <p id="disc" class="green"></p>
+  <h3><span>Total</span><span id="total">₹0</span></h3>
+
+  <div id="giftDiv"></div>
 </div>
 
-<div class="form-box">
+<div class="form">
   <h3>Customer Details</h3>
   <input id="name" placeholder="Your Name">
-  <textarea id="address" rows="3" placeholder="Delivery Address"></textarea>
+  <input id="mobile" placeholder="Mobile Number" type="tel">
+  <textarea id="addr" placeholder="Delivery Address"></textarea>
 </div>
 
 <div class="checkout">
-  <button onclick="orderWhatsApp()">Order on WhatsApp</button>
+  <button onclick="order()">Order on WhatsApp</button>
+</div>
+
+<div class="history">
+  <h3>📜 Order History</h3>
+  <div id="historyList"></div>
 </div>
 </div>
 
 <script>
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-const whatsappNumber = "919336174510";
+const WHATSAPP="919336174510";
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+let orders=JSON.parse(localStorage.getItem("orders"))||[];
 
-const cartItems = document.getElementById("cartItems");
-const emptyMsg = document.getElementById("emptyMsg");
-const subtotalEl = document.getElementById("subtotal");
-const totalEl = document.getElementById("totalPrice");
-const discountEl = document.getElementById("discount");
-const freebieEl = document.getElementById("freebie");
-const nameInput = document.getElementById("name");
-const addressInput = document.getElementById("address");
+const itemsDiv=document.getElementById("items");
+const emptyDiv=document.getElementById("empty");
+const subEl=document.getElementById("sub");
+const totalEl=document.getElementById("total");
+const discEl=document.getElementById("disc");
+const nameInput=document.getElementById("name");
+const mobileInput=document.getElementById("mobile");
+const addrInput=document.getElementById("addr");
+const historyList=document.getElementById("historyList");
+const giftDiv=document.getElementById("giftDiv");
 
-let discountAmount = 0;
-let freeShaker = false;
+// AUTO DISCOUNT LOGIC
+function autoDiscount(amount){
+  let gift=false, off=0;
+  if(amount>=5000){off=100;gift=true;}
+  else if(amount>=2000){off=100;}
+  else if(amount>=1000){off=50;}
+  return {off,gift};
+}
 
+// RENDER CART
 function render(){
-  cartItems.innerHTML="";
-  let subtotal = 0;
-  discountAmount = 0;
-  freeShaker = false;
+  itemsDiv.innerHTML="";
+  giftDiv.innerHTML="";
+  let sub=0;
 
-  if(cart.length === 0){
-    emptyMsg.style.display="block";
+  if(cart.length===0){
+    emptyDiv.style.display="block";
     document.querySelector(".summary").style.display="none";
-    document.querySelector(".form-box").style.display="none";
+    document.querySelector(".form").style.display="none";
     document.querySelector(".checkout").style.display="none";
-    return;
+  }else{
+    emptyDiv.style.display="none";
+    document.querySelector(".summary").style.display="block";
+    document.querySelector(".form").style.display="block";
+    document.querySelector(".checkout").style.display="block";
   }
-
-  emptyMsg.style.display="none";
-  document.querySelector(".summary").style.display="block";
-  document.querySelector(".form-box").style.display="block";
-  document.querySelector(".checkout").style.display="block";
 
   cart.forEach((p,i)=>{
-    subtotal += p.price * p.qty;
-    cartItems.innerHTML += `
-      <div class="cart-item">
-        <img src="${p.img}">
-        <div class="cart-info">
-          <h4>${p.title}</h4>
-          <p>₹${p.price}</p>
-          <div class="qty">
-            <button onclick="qty(${i},-1)">−</button>
-            <span>${p.qty}</span>
-            <button onclick="qty(${i},1)">+</button>
-          </div>
+    sub+=p.price*p.qty;
+    itemsDiv.innerHTML+=`
+    <div class="item">
+      <img src="${p.img}">
+      <div class="info">
+        <h4>${p.title}</h4>
+        <p>₹${p.price}</p>
+        <div class="qty">
+          <button onclick="q(${i},-1)">−</button>
+          <span>${p.qty}</span>
+          <button onclick="q(${i},1)">+</button>
         </div>
-        <button class="remove" onclick="removeItem(${i})">Remove</button>
-      </div>`;
+      </div>
+      <button class="remove" onclick="rem(${i})">Remove</button>
+    </div>`;
   });
 
-  // AUTO DISCOUNT LOGIC
-  if(subtotal >= 1000 && subtotal < 2000){
-    discountAmount = 50;
-  }
-  else if(subtotal >= 2000 && subtotal < 5000){
-    discountAmount = 100;
-  }
-  else if(subtotal >= 5000){
-    discountAmount = 100;
-    freeShaker = true;
-  }
+  const d=autoDiscount(sub);
+  subEl.innerText="₹"+sub;
+  discEl.innerText=d.off?`Discount - ₹${d.off}`:"";
+  totalEl.innerText="₹"+(sub-d.off);
 
-  subtotalEl.innerText = "₹" + subtotal;
-  discountEl.innerText = discountAmount ? `Instant Discount: -₹${discountAmount}` : "";
-  freebieEl.innerText = freeShaker ? "🎁 Free Shaker Included" : "";
-  totalEl.innerText = "₹" + (subtotal - discountAmount);
+  if(d.gift){
+    giftDiv.innerHTML=`
+      <div class="free-gift">
+        <img src="images/shaker.png">
+        <span>🎁 Free Shaker on shopping above ₹5000</span>
+      </div>`;
+  }
 }
 
-function qty(i,v){
-  cart[i].qty += v;
-  if(cart[i].qty <= 0) cart.splice(i,1);
-  save();
-}
-function removeItem(i){ cart.splice(i,1); save(); }
-function save(){ localStorage.setItem("cart",JSON.stringify(cart)); render(); }
+// CART ACTIONS
+function q(i,v){cart[i].qty+=v;if(cart[i].qty<=0)cart.splice(i,1);save();}
+function rem(i){cart.splice(i,1);save();}
+function save(){localStorage.setItem("cart",JSON.stringify(cart));render();}
 
-function orderWhatsApp(){
-  if(!nameInput.value || !addressInput.value){
-    alert("Please enter name & address");
-    return;
+// ORDER
+function order(){
+  if(cart.length===0){alert("Please select items");return;}
+  if(!nameInput.value || !mobileInput.value || !addrInput.value){
+    alert("Please fill Name, Mobile & Address");return;
   }
 
-  let msg = `🛒 New Order\n\nName: ${nameInput.value}\nAddress: ${addressInput.value}\n\n`;
-  let subtotal = 0;
+  let sub=0;
+  let msg=`🛒 *New Order*\n\n`;
+  msg+=`👤 Name: ${nameInput.value}\n`;
+  msg+=`📞 Mobile: ${mobileInput.value}\n`;
+  msg+=`🏠 Address: ${addrInput.value}\n\n`;
 
   cart.forEach(p=>{
-    let t = p.price * p.qty;
-    subtotal += t;
-    msg += `${p.title}\nQty: ${p.qty}\n₹${t}\n\n`;
+    sub+=p.price*p.qty;
+    msg+=`${p.title} x ${p.qty} = ₹${p.price*p.qty}\n`;
   });
 
-  if(discountAmount){
-    msg += `Discount Applied: -₹${discountAmount}\n`;
-  }
-  if(freeShaker){
-    msg += `Free Gift: Shaker 🎁\n`;
-  }
+  const d=autoDiscount(sub);
+  msg+=`\nSubtotal: ₹${sub}\nDiscount: ₹${d.off}\nTotal: ₹${sub-d.off}`;
+  if(d.gift) msg+=`\n🎁 Free Shaker Included`;
 
-  msg += `TOTAL PAYABLE: ₹${subtotal - discountAmount}`;
+  orders.unshift({date:new Date().toLocaleString(),items:cart,total:sub-d.off,gift:d.gift});
+  localStorage.setItem("orders",JSON.stringify(orders));
 
-  window.location.href =
-    `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`;
+  cart=[];localStorage.removeItem("cart");
+  render();renderHistory();
+
+  window.location.href=`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
 }
 
-render();
+// HISTORY
+function renderHistory(){
+  if(orders.length===0)return;
+  document.querySelector(".history").style.display="block";
+  historyList.innerHTML="";
+  orders.forEach(o=>{
+    o.items.forEach(p=>{
+      historyList.innerHTML+=`
+      <div class="history-item">
+        <img src="${p.img}">
+        <div>
+          <strong>${p.title}</strong><br>
+          Qty: ${p.qty}<br>
+          ₹${p.price*p.qty}
+        </div>
+      </div>`;
+    });
+    if(o.gift){
+      historyList.innerHTML+=`
+      <div class="free-gift">
+        <img src="images/shaker.png">
+        <span>🎁 Free Shaker Included</span>
+      </div>`;
+    }
+  });
+}
+
+render();renderHistory();
 </script>
 
 </body>
