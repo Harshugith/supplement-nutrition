@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Product Details</title>
+<title>Product Details | Supplement Nutrition</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -33,17 +33,53 @@
   <p id="productDesc"></p>
   <h3 id="productPrice"></h3>
 
-  <button onclick="addToCart()">Add to Cart</button>
-  <br><br>
-  <button onclick="buyNow()" style="background:#25D366;color:#fff;">Buy Now (WhatsApp)</button>
+  <button onclick="addToCart()"style="background:#25D366;color:#fff;">Add to Cart</button>
 
 </section>
 
 <script>
 const products = {
-  "whey-protein": {title:"Whey Protein",price:2499,desc:"High quality whey protein",img:"images/mb.jpg"},
-  "creatine": {title:"Creatine",price:899,desc:"Strength booster",img:"images/creatine2.png"},
-  "mass-gainer": {title:"Mass Gainer",price:1999,desc:"Weight & muscle gain",img:"images/mass.png"}
+  "whey-protein": {title:"Whey Protein",price:2599,desc:"High quality whey protein",img:"images/mb.jpg"},
+
+  "testafule": {title:"Testafule",price:2999,desc:"High quality testafule",img:"images/testafule.png"},
+
+  "creatine": {title:"Creatine",price:499,desc:"Strength booster",img:"images/creatine2.png"},
+
+  "mass-gainer": {title:"Mass Gainer",price:2799,desc:"Weight & muscle gain",img:"images/mass.png"},
+
+  "lebrada": {title:"Lebrada",price:5349,desc:"Weight & muscle gain",img:"images/lebrada.png"},
+
+  "wellcore": {title:"Wellcore",price:549,desc:"Strength booster",img:"images/wellcore.png"},
+
+  "shilajit": {title:"Shilajit Gummies",price:999,desc:"Energy booster",img:"images/gummies.png"},
+
+  "shilajit-sips": {title:"Shilajit Sips",price:1099,desc:"Energy booster",img:"images/sip.png"},
+
+  "multivitamin": {title:"Multivitamin",price:549,desc:"Vitamin supplement",img:"images/multi.png"},
+
+  "fish-oil": {title:"Fish Oil",price:499,desc:"Omega-3 supplement",img:"images/fish.png"},
+
+  "wrathx": {title:"Wrathx Pre Workout",price:1299,desc:"Pre workout supplement",img:"images/pree.png"},
+
+  "big-daddy": {title:"Big Daddy Pre Workout",price:1499,desc:"Pre workout supplement",img:"images/big-daddy.png"},
+
+  "ots": {title:"MB Ots",price:549,desc:"Pre workout supplement",img:"images/ots.png"},
+
+  "musli": {title:"MB Musli",price:599,desc:"Pre workout supplement",img:"images/musli.png"},
+
+  "peenut-butter": {title:"Peenut Butter",price:549,desc:"Protein powder supplement",img:"images/peenut.png"},
+
+  "gym-vest": {title:"Parada Gym Vest",price:299,desc:"Gym wear item",img:"images/vest.png"},
+
+  "gym-lower": {title:"Parada Gym Lower",price:499,desc:"Gym wear item",img:"images/lower.png"},
+
+  "gym-t-shirt": {title:"Parada Gym T-Shirt",price:399,desc:"Gym wear item",img:"images/mb-tshirt.png"},
+
+  "shaker": {title:"Shaker",price:249,desc:"Supplement shaker",img:"images/shaker.png"},
+
+  "eaa": {title:"EAA",price:899,desc:"Essential Amino Acids",img:"images/eaa.png"},
+
+  "energy-drink": {title:"Energy Drink",price:549,desc:"Instant energy booster",img:"images/energy.png"},
 };
 
 const whatsappNumber = "919336174510";
