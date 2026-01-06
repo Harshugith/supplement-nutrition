@@ -1,158 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <title>Product Details</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Product Details</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <nav class="navbar solid">
-    <div class="logo">NutriBoost</div>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="products.html">Products</a></li>
-    </ul>
-  </nav>
+<nav class="navbar solid">
+  <div class="logo">Supplement Nutrition</div>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li>
+      <a href="cart.html">Cart 🛒 
+        <span id="cartCount" style="
+          background:red;
+          padding:2px 8px;
+          border-radius:50%;
+          font-size:12px;">0</span>
+      </a>
+    </li>
+  </ul>
+</nav>
 
-  <section class="products-page">
+<section class="products-page" style="text-align:center;margin-top:120px">
 
-    <!-- PRODUCT IMAGE -->
-    <img id="productImg" style="max-width:300px;margin-bottom:30px;border-radius:16px;">
+  <img id="productImg" style="max-width:280px;border-radius:16px;">
+  <h2 id="productTitle"></h2>
+  <p id="productDesc"></p>
+  <h3 id="productPrice"></h3>
 
-    <!-- PRODUCT TITLE -->
-    <h2 id="productTitle">Loading...</h2>
+  <button onclick="addToCart()">Add to Cart</button>
+  <br><br>
+  <button onclick="buyNow()" style="background:#25D366;color:#fff;">Buy Now (WhatsApp)</button>
 
-    <!-- PRODUCT DESC -->
-    <p id="productDesc" style="max-width:700px;margin:20px auto;line-height:1.6;"></p>
+</section>
 
-  </section>
+<script>
+const products = {
+  "whey-protein": {title:"Whey Protein",price:2499,desc:"High quality whey protein",img:"images/mb.jpg"},
+  "creatine": {title:"Creatine",price:899,desc:"Strength booster",img:"images/creatine2.png"},
+  "mass-gainer": {title:"Mass Gainer",price:1999,desc:"Weight & muscle gain",img:"images/mass.png"}
+};
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const product = params.get("product");
+const whatsappNumber = "919336174510";
+const params = new URLSearchParams(window.location.search);
+const pid = params.get("product");
 
-    const data = {
-      "whey-protein": {
-        title: "Whey Protein",
-        desc: "High quality whey protein for muscle recovery and growth.",
-        img: "images/mb.jpg"
-      },
-      "testafule": {
-        title: "Testafule Whey Protein",
-        desc: "Fast absorbing whey protein ideal for post-workout.",
-        img: "images/testafule.png"
-      },
-      "creatine": {
-        title: "Creatine",
-        desc: "Improves strength, endurance and workout performance.",
-        img: "images/creatine2.png"
-      },
-      "mass-gainer": {
-        title: "Mass Gainer",
-        desc: "Helps in gaining weight and muscle mass.",
-        img: "images/mass.png"
-      },
-      "lebrada": {
-        title: "Lebrada Mass Gainer",
-        desc: "Premium mass gainer for serious bulk.",
-        img: "images/lebrada.png"
-      },
-      "wellcore": {
-        title: "Wellcore Creatine",
-        desc: "Improves strength, endurance and workout performance.",
-        img: "images/wellcore.png"
-      },
-      "shilajit": {
-        title: "Shilajit Gummeies",
-        desc: "Natural supplement for energy and vitality.",
-        img: "images/gummies.png"
-      },
-      "shilajit-sips": {
-        title: "Shilajit Sips",
-        desc: "Natural supplement for energy and vitality.",
-        img: "images/sip.png"
-      },
-      "multivitamin": {
-        title: "Multivitamin",
-        desc: "Complete multivitamin for overall health and wellness.",
-        img: "images/multi.png"
-      },
-      "fish-oil": {
-        title: "Fish Oil",
-        desc: "Rich in omega-3 fatty acids for heart and brain health.",
-        img: "images/fish.png"
-      },
-      "wrathx": {
-        title: "Wrathx Pre Workout",
-        desc: "Enhances focus, energy, and endurance for intense workouts.",
-        img: "images/pree.png"
-      },
-      "big-daddy": {
-        title: "Big Daddy Pre Workout",
-        desc: "Enhances focus, energy, and endurance for intense workouts.",
-        img: "images/big-daddy.png"
-      },
-      "ots": {
-        title: "MB Ots",
-        desc: "Optimal protein support formula.",
-        img: "images/ots.png"
-      },
-      "musli": {
-        title: "MB Musli",
-        desc: "Natural energy booster and aphrodisiac.",
-        img: "images/musli.png"
-      },
-      "peenut-butter": {
-        title: "Peenut Butter",
-        desc: "Delicious and nutritious peanut butter spread.",
-        img: "images/peenut.png"
-      },
-      "gym-vest": {
-        title: "Gym Vest",
-        desc: "Comfortable and functional gym vest.",
-        img: "images/vest.png"
-      },
-      "gym-lower": {
-        title: "Gym Lower",
-        desc: "Comfortable and functional gym lower.",
-        img: "images/lower.png"
-      },
-      "gym-t-shirt": {
-        title: "Gym t-shirt",
-        desc: "Comfortable and functional gym t-shirt.",
-        img: "images/mb-tshirt.png"
-      },
-      "shaker": {
-        title: "Shaker",
-        desc: "Comfortable and functional gym shaker.",
-        img: "images/shaker.png"
-      },
-      "eaa": {
-        title: "EAA",
-        desc: "Essential amino acids for muscle recovery.",
-        img: "images/eaa.png"
-      },
-      "energy-drink": {
-        title: "Energy Drink",
-        desc: "Boost your energy and focus with our energy drink.",
-        img: "images/energy.png"
-      }
-    };
+let current;
 
-    // LOAD DATA
-    if (product && data[product]) {
-      document.getElementById("productTitle").innerText = data[product].title;
-      document.getElementById("productDesc").innerText = data[product].desc;
-      document.getElementById("productImg").src = data[product].img;
-    } else {
-      document.getElementById("productTitle").innerText = "Product Not Found";
-    }
-  </script>
+if(products[pid]){
+  current = {id:pid,qty:1,...products[pid]};
+  productImg.src = current.img;
+  productTitle.innerText = current.title;
+  productDesc.innerText = current.desc;
+  productPrice.innerText = "₹"+current.price;
+}
+
+function addToCart(){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let found = cart.find(i=>i.id===current.id);
+  if(found){ found.qty++; }
+  else{ cart.push(current); }
+  localStorage.setItem("cart",JSON.stringify(cart));
+  updateCount();
+  alert("Added to cart ✅");
+}
+
+function buyNow(){
+  let msg = `🛒 *Buy Now Order*%0A%0A${current.title}%0AQty: 1%0APrice: ₹${current.price}`;
+  window.open(`https://wa.me/${whatsappNumber}?text=${msg}`,"_blank");
+}
+
+function updateCount(){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cartCount.innerText = cart.reduce((a,b)=>a+b.qty,0);
+}
+updateCount();
+</script>
 
 </body>
-
 </html>
